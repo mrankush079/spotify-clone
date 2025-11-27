@@ -1,11 +1,17 @@
 import React from 'react';
 
-const SongCard = ({ song }) => {
+const SongCard = ({ song, onClick }) => {
+  const { coverUrl, title, artist } = song || {};
+
   return (
-    <div className="card">
-      <img src={song.coverUrl} alt={song.title} className="card-img" />
-      <p className="Card-Title">{song.title}</p>
-      <p className="Card-Info">{song.artist}</p>
+    <div className="card" onClick={onClick}>
+      <img
+        src={coverUrl || '/assets/default-cover.jpg'}
+        alt={title ? `Cover art for ${title}` : 'Song cover art'}
+        className="card-img"
+      />
+      <p className="card-title">{title || 'Unknown Title'}</p>
+      <p className="card-info">{artist || 'Unknown Artist'}</p>
     </div>
   );
 };

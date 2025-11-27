@@ -3,98 +3,126 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease; /* smooth theme transitions */
 }
 
 body {
   font-family: 'Segoe UI', sans-serif;
   background-color: #121212;
   color: #ffffff;
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
+/* Links & Buttons default styles */
 a {
   text-decoration: none;
   color: inherit;
 }
-
 button {
   cursor: pointer;
   font-family: inherit;
+  border: none;
+  background: none;
 }
 
-/* === Layout === */
-.main {
+/* === Layout: whole app wrapper (sidebar + content + player) === */
+.app-wrapper {
   display: flex;
+  flex-direction: row;
   height: 100vh;
-  width: 100%;
   overflow: hidden;
 }
 
-/* === Sidebar === */
+/* Sidebar fixed width, full height, scroll if overflow */
 .sidebar {
-  width: 240px;
-  background-color: #000000;
+  flex: 0 0 240px;
+  background-color: #000;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
 }
 
-.nav-option {
+/* Sidebar nav items */
+.sidebar .nav-option {
   display: flex;
   align-items: center;
   gap: 10px;
   color: #b3b3b3;
   font-size: 16px;
-  transition: color 0.3s ease;
+  padding: 8px 4px;
+  border-radius: 4px;
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+.sidebar .nav-option:hover,
+.sidebar .nav-option.active {
+  color: #fff;
+  background-color: #1f1f1f;
 }
 
-.nav-option:hover {
-  color: #ffffff;
+/* Main content + footer (player) wrapper — flex column so footer stays bottom */
+.main-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
-/* === Dashboard === */
+/* Scrollable content area above player */
 .main-content {
   flex: 1;
-  padding: 30px;
   overflow-y: auto;
+  padding: 30px;
   background-color: #181818;
 }
 
+/* Content cards grid */
 .card-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
 }
 
-/* === Song Card === */
+/* Card UI */
 .card {
   background-color: #282828;
   padding: 15px;
   border-radius: 8px;
   transition: transform 0.2s ease, background-color 0.3s ease;
+  cursor: pointer;
 }
-
 .card:hover {
-  transform: scale(1.03);
-  background-color: #333333;
+  transform: translateY(-5px);
+  background-color: #333;
 }
-
 .card img {
   width: 100%;
   border-radius: 6px;
+  object-fit: cover;
 }
-
-.card h4 {
+.card .card-title {
   margin-top: 10px;
   font-size: 16px;
   font-weight: 500;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card .card-info {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #aaa;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* === Music Player === */
+/* === Music Player (fixed at bottom) === */
 .music-player {
-  position: fixed;
-  bottom: 0;
+  flex: 0 0 auto;
   width: 100%;
   background-color: #282828;
   padding: 10px 20px;
@@ -103,48 +131,79 @@ button {
   justify-content: space-between;
   color: #ffffff;
   z-index: 100;
+  /* optionally add a little slide-up animation when it first mounts */
+  transform: translateY(100%);
+  animation: slideUp 0.5s forwards ease-out;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+  }
 }
 
 /* === Auth Forms (Login / Signup) === */
 .auth-form {
   max-width: 400px;
-  margin: 80px auto;
+  margin: 120px auto;
   background-color: #1e1e1e;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
-
+.auth-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #1db954;
+}
 .auth-form input {
   width: 100%;
   padding: 12px;
   margin-bottom: 15px;
   border: none;
   border-radius: 4px;
-  background-color: #333333;
-  color: #ffffff;
+  background-color: #333;
+  color: #fff;
 }
-
+.auth-form input:focus {
+  outline: 2px solid #1db954;
+}
 .auth-form button {
   width: 100%;
   padding: 12px;
   background-color: #1db954;
-  border: none;
   border-radius: 4px;
-  color: #ffffff;
+  color: #fff;
   font-weight: bold;
   transition: background-color 0.3s ease;
 }
-
 .auth-form button:hover {
   background-color: #1ed760;
 }
 
-/* === Scrollbar === */
+/* === Scrollbar styling === */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-thumb {
   background-color: #1db954;
   border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #181818;
+}
+
+/* === Responsive tweaks (mobile / small width) === */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* maybe hide sidebar on small screen — or implement drawer/sidebar toggle */
+  }
+  .app-wrapper {
+    flex-direction: column;
+  }
+  .music-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+  }
 }
